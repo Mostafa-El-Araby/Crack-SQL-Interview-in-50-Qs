@@ -1,0 +1,12 @@
+WITH CTE AS
+(
+    SELECT
+        [class],
+        COUNT(*) AS Counters
+    FROM [Courses]
+    GROUP BY [class]
+    HAVING COUNT([class]) >= 5
+)
+SELECT
+    [class]
+FROM CTE;
