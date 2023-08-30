@@ -1,0 +1,11 @@
+WITH CTE AS
+(
+    SELECT *,
+        SUM([Weight]) OVER (ORDER BY [turn] ASC ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS 'Cumulative Sum'
+    FROM [Queue]
+)
+SELECT
+    TOP 1 [person_name]
+FROM [CTE]
+WHERE [Cumulative Sum] <= 1000
+ORDER BY [Cumulative Sum] DESC;

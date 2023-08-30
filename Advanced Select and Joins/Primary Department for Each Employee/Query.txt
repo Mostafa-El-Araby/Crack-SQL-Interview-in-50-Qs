@@ -1,0 +1,21 @@
+WITH CTE AS
+(
+    SELECT
+        [employee_id],
+        MAX([department_id]) AS 'department_id',
+        COUNT(*) AS 'Frequency'
+    FROM [Employee]
+    GROUP BY [employee_id]
+    HAVING COUNT([employee_id]) = 1
+)
+SELECT
+    [employee_id],
+    [department_id]
+FROM [CTE]
+UNION
+SELECT
+    [employee_id],
+    [department_id]
+FROM [Employee]
+WHERE [primary_flag] = 'Y'
+ORDER BY [employee_id] ASC;
