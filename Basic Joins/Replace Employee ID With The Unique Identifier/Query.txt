@@ -1,0 +1,6 @@
+SELECT
+    Uni.[unique_id],
+    emp.[name]
+FROM EmployeeUNI AS Uni
+RIGHT OUTER JOIN Employees emp
+ON emp.[id] = Uni.[id];

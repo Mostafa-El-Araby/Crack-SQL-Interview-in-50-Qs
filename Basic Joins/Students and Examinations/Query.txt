@@ -1,0 +1,19 @@
+WITH CTE AS
+(
+    SELECT
+        [student_id],
+        [student_name],
+        [subject_name]
+    FROM [Students], [Subjects]
+)
+SELECT
+    t.[student_id],
+    t.[student_name],
+    t.[subject_name],
+    COUNT(exam.[student_id]) AS 'attended_exams'
+FROM [CTE] t
+LEFT OUTER JOIN [Examinations] exam
+ON t.[student_id] = exam.[student_id]
+AND t.[subject_name] = exam.[subject_name]
+GROUP BY t.[student_id], t.[student_name], t.[subject_name]
+ORDER BY t.[student_id], t.[subject_name];

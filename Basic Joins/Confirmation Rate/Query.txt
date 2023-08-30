@@ -1,0 +1,18 @@
+SELECT
+    signup.[user_id],
+    ROUND
+    (
+        SUM
+        (
+            CASE
+                WHEN confirm.[action] = 'confirmed' THEN 1
+                WHEN confirm.[time_stamp] IS NULL THEN 0.00
+                ELSE 0
+            END
+        )
+        / COUNT(*), 2
+    ) AS 'confirmation_rate'
+FROM [Signups] signup
+LEFT OUTER JOIN [Confirmations] confirm
+ON signup.[user_id] = confirm.[user_id]
+GROUP BY signup.[user_id];

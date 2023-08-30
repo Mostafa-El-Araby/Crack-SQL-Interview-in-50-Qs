@@ -1,0 +1,7 @@
+SELECT
+    MAX(manager.[name]) AS [name]
+FROM [Employee] AS manager
+INNER JOIN [Employee] AS emp
+ON manager.[id] = emp.[managerId]
+GROUP BY manager.[id]
+HAVING COUNT(manager.[id]) >= 5;
