@@ -1,0 +1,15 @@
+DECLARE @players_no INT = (SELECT COUNT(DISTINCT [player_id]) FROM [Activity]);
+WITH CTE AS
+(
+    SELECT
+        [player_id],
+        MIN([event_date]) AS 'First_Login'
+    FROM [Activity]
+    GROUP BY [player_id]
+)
+SELECT
+    ROUND(COUNT(CTE.[player_id]) * 1.00 / @players_no, 2) AS 'fraction'
+FROM [Activity] active
+INNER JOIN [CTE]
+ON active.[player_id] = CTE.[player_id]
+AND active.[event_date] = DATEADD(DAY, 1, CTE.[First_Login]);

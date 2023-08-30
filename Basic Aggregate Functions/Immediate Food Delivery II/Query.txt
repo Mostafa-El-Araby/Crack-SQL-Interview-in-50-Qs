@@ -1,0 +1,14 @@
+DECLARE @customers_no INT = (SELECT COUNT(DISTINCT [customer_id]) FROM [Delivery]);
+WITH CTE AS
+(
+    SELECT
+        [customer_id],
+        MIN([order_date]) AS 'first_order_date',
+        MIN([customer_pref_delivery_date]) AS [customer_pref_delivery_date]
+    FROM [Delivery]
+    GROUP BY [customer_id]
+)
+SELECT
+    ROUND(COUNT(CTE.[customer_id]) * 100.00 / @customers_no, 2) AS 'immediate_percentage'
+FROM [CTE]
+WHERE [first_order_date] = [customer_pref_delivery_date];
