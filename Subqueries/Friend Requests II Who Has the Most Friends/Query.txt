@@ -1,0 +1,42 @@
+WITH requesters AS
+(
+    SELECT
+        [requester_id],
+        COUNT(*) AS 'requesters_cnt'
+    FROM [RequestAccepted]
+    GROUP BY [requester_id]
+),
+accepters AS
+(
+    SELECT
+        [accepter_id],
+        COUNT(*) AS 'accepters_cnt'
+    FROM [RequestAccepted]
+    GROUP BY [accepter_id]
+),
+merging AS
+(
+    SELECT
+        [requester_id] AS id,
+        [requesters_cnt] AS 'Frequency'
+    FROM [requesters]
+    UNION ALL
+    SELECT
+        [accepter_id] AS id,
+        [accepters_cnt] AS 'Frequency'
+    FROM [accepters]
+),
+agg AS
+(
+    SELECT
+        [id],
+        SUM([Frequency]) AS 'Duplicates'
+    FROM [merging]
+    GROUP BY [id]
+)
+SELECT
+    [id],
+    [Duplicates] AS 'num'
+FROM [agg]
+WHERE [Duplicates] = (SELECT MAX([Duplicates]) FROM [agg])
+ORDER BY [id] ASC;
