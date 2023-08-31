@@ -1,0 +1,30 @@
+WITH CTE1 AS
+(
+    SELECT
+        [user_id],
+        COUNT(*) AS Frequency
+    FROM [MovieRating]
+    GROUP BY [user_id]
+),
+CTE2 AS
+(
+    SELECT
+        [movie_id],
+        AVG([rating] * 1.0) AS 'Avg_Rating'
+    FROM [MovieRating]
+    WHERE YEAR([created_at]) = 2020 AND MONTH([created_at]) = 2
+    GROUP BY [movie_id]
+)
+SELECT
+    MIN([user].[name]) AS 'results'
+FROM [Users] AS [user]
+INNER JOIN [CTE1]
+ON CTE1.[user_id] = [user].[user_id]
+AND CTE1.[Frequency] = (SELECT MAX([Frequency]) FROM [CTE1])
+UNION ALL
+SELECT
+    MIN(movie.[title]) AS 'results'
+FROM [Movies] AS movie
+INNER JOIN [CTE2]
+ON CTE2.[movie_id] = movie.[movie_id]
+AND CTE2.[Avg_Rating] = (SELECT MAX([Avg_Rating]) FROM [CTE2]);

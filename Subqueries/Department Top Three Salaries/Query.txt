@@ -1,0 +1,17 @@
+WITH CTE AS
+(
+    SELECT
+        dept.[name] AS 'Department',
+        emp.[name] AS 'Employee',
+        emp.[salary] AS 'Salary',
+        DENSE_RANK() OVER(PARTITION BY dept.[id] ORDER BY emp.[salary] DESC) AS rnk
+    FROM [Employee] emp
+    INNER JOIN [Department] dept
+    ON emp.[departmentId] = dept.[id]
+)
+SELECT
+    [Department],
+    [Employee],
+    [Salary]
+FROM [CTE]
+WHERE [rnk] <= 3;
